@@ -3,6 +3,8 @@ package singleagency.project_fliq.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import singleagency.project_fliq.dto.LoginRequest;
 import singleagency.project_fliq.enums.Roles;
 
 import java.util.UUID;
@@ -25,5 +27,10 @@ public class Users {
     private String password;
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 40)
     private Roles roles;
+
+    public boolean isLoginCorret(LoginRequest loginRequest, PasswordEncoder passwordEncoder){
+        return passwordEncoder.matches(loginRequest.password(), this.password);
+    }
 }
