@@ -28,6 +28,7 @@ public class UserRegisterService {
         }
 
         var user = new Users();
+        user.setName(createUserDto.name());
         user.setEmail(createUserDto.email());
         user.setPassword(bPasswordEncoder.encode(createUserDto.password()));
         user.setRoles(basicRole);
