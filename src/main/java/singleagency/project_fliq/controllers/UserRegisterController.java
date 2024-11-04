@@ -16,7 +16,6 @@ public class UserRegisterController {
     private final UserRegisterService userRegisterService;
 
     @Transactional
-    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/register")
     public ResponseEntity<Void> registerUsers(@RequestBody @Valid CreateUserDto createUserDto){
         userRegisterService.registerUsers(createUserDto);
