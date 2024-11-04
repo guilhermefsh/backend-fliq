@@ -1,6 +1,7 @@
 package singleagency.project_fliq.controllers;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +20,7 @@ public class UserRegisterController {
 
     @Transactional
     @PostMapping("/register")
-    public ResponseEntity<Void> registerUsers(@RequestBody CreateUserDto createUserDto){
+    public ResponseEntity<Void> registerUsers(@RequestBody @Valid CreateUserDto createUserDto){
         userRegisterService.registerUsers(createUserDto);
         return ResponseEntity.ok().build();
     }

@@ -1,4 +1,10 @@
 package singleagency.project_fliq.dto;
 
-public record CreateUserDto(String email, String password) {
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import singleagency.project_fliq.validation.annotation.PasswordStrenght;
+
+public record CreateUserDto(
+        @NotBlank(message = "O campo email não deve estar vazio!") @Email(message = "Email inválido") String email,
+        @PasswordStrenght String password) {
 }
