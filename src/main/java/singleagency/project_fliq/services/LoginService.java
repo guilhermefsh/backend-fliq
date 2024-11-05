@@ -9,6 +9,7 @@ import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 import singleagency.project_fliq.dto.LoginRequest;
 import singleagency.project_fliq.dto.LoginResponse;
+import singleagency.project_fliq.exceptions.IncorrectPassword;
 import singleagency.project_fliq.exceptions.UserNotFoundException;
 import singleagency.project_fliq.repositories.UserRepository;
 
@@ -26,12 +27,16 @@ public class LoginService {
 
         var user = userRepository.findByEmail(loginRequest.email());
 
-        if(user.isEmpty() || !user.get().isLoginCorret(loginRequest, bPasswordEncoder)){
+        if(user.isEmpty()){
             throw new UserNotFoundException("Usuário não existe!");
         }
 
+        if(!user.get().isLoginCorret(loginRequest, bPasswordEncoder)){
+            throw new IncorrectPassword("Senha incorreta!");
+        }
+
         var now = Instant.now();
-        var expiresIn = 300L;
+        var expiresIn = 21600L;
 
         var claims = JwtClaimsSet.builder()
                 .issuer("fliq")
