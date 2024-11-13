@@ -28,11 +28,11 @@ public class LoginService {
         var user = userRepository.findByEmail(loginRequest.email());
 
         if(user.isEmpty()){
-            throw new UserNotFoundException("Usuário não existe!");
+            throw new UserNotFoundException();
         }
 
         if(!user.get().isLoginCorret(loginRequest, bPasswordEncoder)){
-            throw new IncorrectPassword("Senha incorreta!");
+            throw new IncorrectPassword();
         }
 
         var now = Instant.now();

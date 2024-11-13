@@ -24,7 +24,7 @@ public class UserRegisterService {
 
         var userExist = userRepository.findByEmail(createUserDto.email());
         if(userExist.isPresent()){
-            throw new UserAlreadyExistsException("Já existe um usuário com esse email!");
+            throw new UserAlreadyExistsException();
         }
 
         var user = new Users();

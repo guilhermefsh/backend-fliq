@@ -6,7 +6,11 @@ import lombok.Setter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import singleagency.project_fliq.dto.LoginRequest;
 import singleagency.project_fliq.enums.Roles;
+import singleagency.project_fliq.exceptions.MaxRestaurantsForPlan;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -29,9 +33,12 @@ public class Users {
     @Column( nullable = false)
     private String password;
 
-    @Enumerated(EnumType.STRING)
     @Column(length = 40)
+    @Enumerated(EnumType.STRING)
     private Roles roles;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Restaurant> restaurants = new ArrayList<>();
 
     public boolean isLoginCorret(LoginRequest loginRequest, PasswordEncoder passwordEncoder){
         return passwordEncoder.matches(loginRequest.password(), this.password);

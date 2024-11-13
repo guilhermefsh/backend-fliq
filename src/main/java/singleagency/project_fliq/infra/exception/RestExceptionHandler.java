@@ -1,52 +1,56 @@
 package singleagency.project_fliq.infra.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ProblemDetail;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import singleagency.project_fliq.exceptions.FliqException;
+import singleagency.project_fliq.exceptions.MaxRestaurantsForPlan;
 import singleagency.project_fliq.exceptions.UserAlreadyExistsException;
 import singleagency.project_fliq.exceptions.UserNotFoundException;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class RestExceptionHandler {
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ProblemDetail handleUserNotFound(FliqException exception){
-        return exception.toProblemDetail();
+    public ResponseEntity<Map<String, String>> handleUserNotFound(FliqException exception){
+        return ResponseEntity.badRequest()
+                .body(Map.of("ErrorDetail", exception.getErrorDetail()));
     }
 
     @ExceptionHandler(UserAlreadyExistsException.class)
-    public ProblemDetail handleUserAlreadyExists(FliqException exception){
-        return exception.toProblemDetail();
+    public ResponseEntity<Map<String, String>> handleUserAlreadyExists(FliqException exception){
+        return ResponseEntity.unprocessableEntity()
+                .body(Map.of("ErrorDetail", exception.getErrorDetail()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ProblemDetail handleMethodArgumentNotValid(MethodArgumentNotValidException exception){
+    public ResponseEntity<Map<String, List<InvalidParam>>> handleMethodArgumentNotValid(MethodArgumentNotValidException exception) {
 
-        var filedErrors = exception.getFieldErrors()
+        List<InvalidParam> fieldErrors = exception.getFieldErrors()
                 .stream()
                 .map(fieldError -> new InvalidParam(fieldError.getField(), fieldError.getDefaultMessage()))
-                .toList();
+                .collect(Collectors.toList());
 
-
-        var problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
-
-        problemDetail.setTitle("Erro de validação");
-        problemDetail.setProperty("Invalid-params", filedErrors);
-
-        return problemDetail;
+        return ResponseEntity.badRequest()
+                .body(Map.of("Invalid-params", fieldErrors));
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ProblemDetail handleHttpMessageNotReadable(HttpMessageNotReadableException exception) {
-        var problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
-
-        problemDetail.setTitle("O corpo da requisição não é válido");
-
-        return problemDetail;
+    public ResponseEntity<Map<String, String>> handleHttpMessageNotReadable(HttpMessageNotReadableException exception) {
+        return ResponseEntity.badRequest()
+                .body(Map.of("ErrorDetail", "O corpo da requisição não é válido"));
     }
 
+    @ExceptionHandler(MaxRestaurantsForPlan.class)
+    public ResponseEntity<Map<String, String>> handleMaxRestaurantsForPlan(FliqException exception) {
+        return ResponseEntity.badRequest()
+                .body(Map.of("ErrorDetail", exception.getMessage()));
+    }
 }
+

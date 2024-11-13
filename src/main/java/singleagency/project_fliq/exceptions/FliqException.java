@@ -1,15 +1,15 @@
 package singleagency.project_fliq.exceptions;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ProblemDetail;
+import lombok.Getter;
 
+@Getter
 public class FliqException extends RuntimeException {
 
-    public ProblemDetail toProblemDetail() {
-        var problemDetail = ProblemDetail.forStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+    private final String errorDetail;
 
-        problemDetail.setTitle("Fliq internal server error");
-
-        return problemDetail;
+    public FliqException(String errorDetail) {
+        super(errorDetail);
+        this.errorDetail = errorDetail;
     }
+
 }

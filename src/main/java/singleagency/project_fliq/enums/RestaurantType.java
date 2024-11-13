@@ -4,9 +4,16 @@ import lombok.Getter;
 
 @Getter
 public enum RestaurantType {
-    HAMBURGUER_ARTESANAL("Hamburguer Artesanal"),
-    PIZZA("Pizza"),
-    LANCHES_PRENSADOS("Lanches Prensados");
+    LANCHONETE("Lanchonete"),
+    PIZZARIA("Pizzaria"),
+    DOCES_E_BOLOS("Doces e bolos"),
+    JAPONESA("Japonesa"),
+    RESTAURANTE("Restaurante"),
+    ADEGA("Adega"),
+    CHURRASCARIA("Churrascaria"),
+    CONVENIENCIA("Conveniência"),
+    SORVETERIA("Sorveteria"),
+    PADARIA("Padaria");
 
     private final String description;
 
