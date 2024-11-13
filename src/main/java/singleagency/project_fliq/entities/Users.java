@@ -37,8 +37,8 @@ public class Users {
     @Enumerated(EnumType.STRING)
     private Roles roles;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Restaurant> restaurants = new ArrayList<>();
+    @OneToMany(targetEntity = Users.class, cascade = CascadeType.ALL)
+    private List<Restaurant> restaurants;
 
     public boolean isLoginCorret(LoginRequest loginRequest, PasswordEncoder passwordEncoder){
         return passwordEncoder.matches(loginRequest.password(), this.password);

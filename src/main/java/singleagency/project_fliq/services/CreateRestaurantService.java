@@ -25,8 +25,7 @@ public class CreateRestaurantService {
         var userRole = user.getRoles();
         var maxRestaurants = userRole.getMaxRestaurants();
 
-        var userRestaurants = restaurantRepository.findByUser(user);
-        if (userRestaurants.size() >= maxRestaurants) {
+        if (user.getRestaurants().size() >= maxRestaurants) {
             throw new IllegalStateException("Limite de restaurantes atingido para o usuário com o plano " + userRole.getRoleName());
         }
 
@@ -37,7 +36,12 @@ public class CreateRestaurantService {
         restaurant.setType(createRestaurantDto.type());
         restaurant.setUser(user);
 
+        System.out.println("Qtd rest. usuarios: " + user.getRestaurants().size());
+        System.out.println("Qtd max. rest. role: " + userRole.getMaxRestaurants());
+
         return restaurantRepository.save(restaurant);
+
+
     }
     //public void createRestaurant(@RequestBody CreateRestaurantDto createRestaurantDto, UUID userId){
 
